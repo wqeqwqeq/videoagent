@@ -1,0 +1,26 @@
+[project]
+name = "videoagent"
+version = "0.1.0"
+description = "Generate narrated videos from Tableau dashboards using Azure OpenAI"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    # Microsoft Agent Framework
+    "agent-framework>=1.0.0b251120",
+    # Tableau Server Client
+    "tableauserverclient>=0.31",
+    # Azure OpenAI
+    "openai>=1.55.0",
+    # Configuration
+    "pyyaml>=6.0.1",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    # Observability (optional)
+    "azure-monitor-opentelemetry-exporter>=1.0.0b21",
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+]
+
+[tool.uv]
+prerelease = "allow"
