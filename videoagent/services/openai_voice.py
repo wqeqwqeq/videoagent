@@ -5,7 +5,7 @@ from typing import Optional
 
 from openai import AsyncAzureOpenAI
 
-from ..utils.settings import get_azure_openai_settings
+from ..config.settings import get_azure_openai_settings
 
 # Singleton instance
 _voice_client: Optional["AzureOpenAIVoiceClient"] = None

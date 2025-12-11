@@ -6,7 +6,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import tableauserverclient as TSC
 
-from ..utils.settings import get_tableau_settings
+from ..config.settings import get_tableau_settings
 
 
 class TableauService:
