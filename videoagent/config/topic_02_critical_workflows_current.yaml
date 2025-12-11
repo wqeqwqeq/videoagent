@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Critical Workflows Current Status
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - If ALL workflows healthy/within SLO: Keep it very brief - "All workflows completed within SLO"
   - If issues exist: Only mention failed/delayed workflows

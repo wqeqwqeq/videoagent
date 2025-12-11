@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Major Incidents
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - If NO incidents: Keep it very brief - "No major incidents"
   - If incidents exist: Mention briefly, details on screen

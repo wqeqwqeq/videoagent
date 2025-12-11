@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Platform Health Current Status
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - If ALL platforms green/healthy: Keep it very brief - "All platforms green" or "Platform health all green"
   - If issues exist: Only mention non-green platforms

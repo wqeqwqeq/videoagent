@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Major Issues/Highlights
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - If NO major issues: Keep it very brief - "No major issues today"
   - If issues exist: Briefly mention key issue, the image shows details

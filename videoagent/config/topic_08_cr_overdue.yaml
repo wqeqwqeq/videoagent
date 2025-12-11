@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Overdue Change Requests
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - If NO overdue changes: Keep it very brief - "No overdue changes"
   - If overdue exist: Mention briefly, details on screen

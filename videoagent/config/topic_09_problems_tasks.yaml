@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Problems and Problem Tasks
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - If NO active problems: Keep it very brief - "No active problems"
   - If problems exist: State briefly, details on screen

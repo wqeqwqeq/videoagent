@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Change Requests Deployed in Last 24 Hours
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - If NO changes: Keep it very brief - "No changes deployed yesterday"
   - If changes exist: State the count briefly, details are on screen

@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Summary of Open Items
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - If NO open items: Keep it very brief - "No open items"
   - If items exist: Mention briefly, details on screen

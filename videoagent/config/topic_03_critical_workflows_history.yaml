@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Business Critical Workflows History Status
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - Keep it extremely brief - the chart/image tells the story
   - Just acknowledge the history is updated

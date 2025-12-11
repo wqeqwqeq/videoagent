@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Manual/Unplanned Activities
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - If NO activities: Keep it very brief - "DQ labs check complete, no failures"
   - If activities exist: Mention key items briefly, details on screen

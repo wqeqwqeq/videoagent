@@ -5,6 +5,8 @@ instructions: |
 
   Topic: Upcoming/Completed Events
 
+  The user will pass today's report as JSON data. Your response MUST be based entirely on this JSON data.
+
   CRITICAL RULES:
   - If NO events: Keep it very brief - "No upcoming events"
   - If events exist: Mention key events briefly, details on screen
