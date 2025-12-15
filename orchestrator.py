@@ -1,11 +1,7 @@
 """Orchestrator for VideoAgent - coordinates Tableau data download and voice generation."""
 
 import asyncio
-import csv
-import io
-import json
 import os
-from datetime import date
 from typing import Callable, Optional
 
 from dotenv import load_dotenv
@@ -15,55 +11,22 @@ from videoagent.config import (
     sheet_topic_map,
     sheet_filters,
     get_tableau_settings,
+    get_storage_settings,
 )
-from videoagent.services import TableauService, get_openai_voice_client
-
-
-def create_output_folders(base_path: str = "./output") -> dict[str, str]:
-    """Create output folder structure if not exists.
-
-    Structure: output/{today's date}/{audio,image,csv,transcript}
-
-    Args:
-        base_path: Base output directory path
-
-    Returns:
-        Dictionary mapping folder names to path strings
-    """
-    today = date.today().isoformat()  # YYYY-MM-DD format
-    folders = ["audio", "image", "csv", "transcript"]
-    paths = {}
-
-    # Create date-based subfolder
-    date_path = os.path.join(base_path, today)
-
-    for folder in folders:
-        folder_path = os.path.join(date_path, folder)
-        os.makedirs(folder_path, exist_ok=True)
-        paths[folder] = folder_path
-
-    return paths
-
-
-def csv_to_json(csv_content: str) -> str:
-    """Convert CSV content string to JSON string.
-
-    Args:
-        csv_content: CSV data as string
-
-    Returns:
-        JSON string representation of the CSV data
-    """
-    reader = csv.DictReader(io.StringIO(csv_content))
-    rows = list(reader)
-    return json.dumps(rows, indent=2)
+from videoagent.services import (
+    TableauService,
+    get_openai_voice_client,
+    get_storage_backend,
+    csv_to_json,
+    StorageBackend,
+)
 
 
 async def process_sheet(
     view: dict,
     topic_id: str,
     tableau_service: TableauService,
-    output_paths: dict[str, str],
+    storage: StorageBackend,
     filter_func: Optional[Callable[[str], str]] = None,
 ) -> dict:
     """Process a single sheet: download image, CSV, generate audio.
@@ -72,7 +35,7 @@ async def process_sheet(
         view: View dict with id, name, etc. from Tableau
         topic_id: Topic identifier for config lookup
         tableau_service: Initialized TableauService instance
-        output_paths: Dictionary of output folder paths
+        storage: Storage backend for writing outputs
         filter_func: Optional function to filter/transform CSV content
 
     Returns:
@@ -86,9 +49,10 @@ async def process_sheet(
     # Load topic configuration
     topic_config = load_topic_config(topic_id)
 
-    # Download image
-    image_path = os.path.join(output_paths["image"], f"{topic_id}.png")
-    tableau_service.download_view_image(view_id, image_path)
+    # Download image and save via storage backend
+    image_bytes = tableau_service.download_view_image(view_id)
+    image_path = storage.get_full_path("image", f"{topic_id}.png")
+    storage.write_bytes(image_path, image_bytes)
     print(f"  Downloaded image: {image_path}")
 
     # Download CSV
@@ -98,9 +62,8 @@ async def process_sheet(
     if filter_func:
         csv_content = filter_func(csv_content)
 
-    csv_path = os.path.join(output_paths["csv"], f"{topic_id}.csv")
-    with open(csv_path, "w", encoding="utf-8") as f:
-        f.write(csv_content)
+    csv_path = storage.get_full_path("csv", f"{topic_id}.csv")
+    storage.write_text(csv_path, csv_content)
     print(f"  Downloaded CSV: {csv_path}")
 
     # Convert CSV to JSON for voice prompt
@@ -116,15 +79,13 @@ async def process_sheet(
     )
 
     # Save audio
-    audio_path = os.path.join(output_paths["audio"], f"{topic_id}.mp3")
-    with open(audio_path, "wb") as f:
-        f.write(audio_bytes)
+    audio_path = storage.get_full_path("audio", f"{topic_id}.mp3")
+    storage.write_bytes(audio_path, audio_bytes)
     print(f"  Generated audio: {audio_path}")
 
     # Save transcript
-    transcript_path = os.path.join(output_paths["transcript"], f"{topic_id}.txt")
-    with open(transcript_path, "w", encoding="utf-8") as f:
-        f.write(transcript)
+    transcript_path = storage.get_full_path("transcript", f"{topic_id}.txt")
+    storage.write_text(transcript_path, transcript)
     print(f"  Saved transcript: {transcript_path}")
 
     return {
@@ -142,10 +103,14 @@ async def main():
     # Load environment variables
     load_dotenv()
 
-    # Create output folder structure
-    output_base = os.getenv("OUTPUT_BASE_PATH", "./output")
-    output_paths = create_output_folders(output_base)
-    print(f"Output folders created at: {output_base}")
+    # Get storage backend and create output structure
+    storage = get_storage_backend()
+    output_base = os.getenv("OUTPUT_BASE_PATH", "output")
+    storage.create_output_structure(output_base)
+
+    storage_settings = get_storage_settings()
+    print(f"Storage mode: {storage_settings.mode}")
+    print(f"Output base: {output_base}")
 
     # Initialize Tableau service
     tableau_service = TableauService()
@@ -186,7 +151,7 @@ async def main():
                 view=view,
                 topic_id=topic_id,
                 tableau_service=tableau_service,
-                output_paths=output_paths,
+                storage=storage,
                 filter_func=filter_func,
             )
             results.append(result)

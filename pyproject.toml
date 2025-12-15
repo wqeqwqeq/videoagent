@@ -16,10 +16,9 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
-    # Observability (optional)
-    "azure-monitor-opentelemetry-exporter>=1.0.0b21",
-    "opentelemetry-api>=1.20.0",
-    "opentelemetry-sdk>=1.20.0",
+    # Azure Blob Storage (optional, for blob storage mode)
+    "azure-storage-blob>=12.19.0",
+    "azure-identity>=1.15.0",
 ]
 
 [tool.uv]

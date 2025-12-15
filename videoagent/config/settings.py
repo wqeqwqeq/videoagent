@@ -36,9 +36,22 @@ class TableauSettings(BaseSettings):
     workbook_id: str = ""
 
 
+class StorageSettings(BaseSettings):
+    """Storage configuration from environment variables."""
+
+    model_config = SettingsConfigDict(
+        env_prefix="STORAGE_", env_file=".env", extra="ignore"
+    )
+
+    mode: str = "local"  # "local" or "blob"
+    account_name: str = ""
+    container: str = "videoagent-output"
+
+
 # Singleton instances
 _azure_settings: Optional[AzureOpenAISettings] = None
 _tableau_settings: Optional[TableauSettings] = None
+_storage_settings: Optional[StorageSettings] = None
 
 
 def get_azure_openai_settings() -> AzureOpenAISettings:
@@ -55,6 +68,14 @@ def get_tableau_settings() -> TableauSettings:
     if _tableau_settings is None:
         _tableau_settings = TableauSettings()
     return _tableau_settings
+
+
+def get_storage_settings() -> StorageSettings:
+    """Get cached StorageSettings instance (singleton)."""
+    global _storage_settings
+    if _storage_settings is None:
+        _storage_settings = StorageSettings()
+    return _storage_settings
 
 
 # ============ Topic Config Loader ============
