@@ -23,14 +23,14 @@ param resourcePrefix string
 @description('Azure region for resources')
 param location string = resourceGroup().location
 
-@description('Existing App Service Plan resource ID')
-param appServicePlanId string
+@description('Existing App Service Plan name')
+param appServicePlanName string
 
 @description('Existing Storage Account name')
 param storageAccountName string
 
-@description('Existing Log Analytics Workspace resource ID')
-param logAnalyticsWorkspaceId string
+@description('Existing Log Analytics Workspace name')
+param logAnalyticsWorkspaceName string
 
 @description('Existing Application Insights name')
 param appInsightsName string
@@ -62,6 +62,14 @@ resource existingAppInsights 'Microsoft.Insights/components@2020-02-02' existing
   name: appInsightsName
 }
 
+resource existingAppServicePlan 'Microsoft.Web/serverfarms@2023-01-01' existing = {
+  name: appServicePlanName
+}
+
+resource existingLogAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
+  name: logAnalyticsWorkspaceName
+}
+
 // ================================================================
 // Storage Container
 // ================================================================
@@ -91,7 +99,7 @@ resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
     type: 'SystemAssigned'
   }
   properties: {
-    serverFarmId: appServicePlanId
+    serverFarmId: existingAppServicePlan.id
     httpsOnly: true
     siteConfig: {
       linuxFxVersion: 'PYTHON|3.12'
@@ -169,7 +177,7 @@ resource functionAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-0
   name: '${functionAppName}-diagnostics'
   scope: functionApp
   properties: {
-    workspaceId: logAnalyticsWorkspaceId
+    workspaceId: existingLogAnalyticsWorkspace.id
     logs: [
       {
         category: 'FunctionAppLogs'

@@ -14,11 +14,11 @@
     "resourcePrefix": {
       "value": "videoagent"
     },
-    "appServicePlanId": {
-      "value": "/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Web/serverfarms/xxx"
+    "appServicePlanName": {
+      "value": "your-existing-appserviceplan"
     },
-    "logAnalyticsWorkspaceId": {
-      "value": "/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.OperationalInsights/workspaces/xxx"
+    "logAnalyticsWorkspaceName": {
+      "value": "your-existing-loganalytics"
     },
     "appInsightsName": {
       "value": "your-existing-appinsights"
