@@ -1,0 +1,46 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Tests
+tests/
+test_*.py
+*_test.py
+
+# Local settings
+local.settings.json
+.env
+.env.example
+
+# Deployment files
+deployment/
+
+# Package manager files
+uv.lock
+poetry.lock
+
+# Documentation
+*.md
+docs/
+
+# Output files (generated at runtime)
+output/
+
+# Misc
+.DS_Store
+Thumbs.db

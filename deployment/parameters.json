@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "azureSubscriptionId": {
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    "azureResourceGroup": {
+      "value": "your-existing-rg"
+    },
+    "location": {
+      "value": "eastus2"
+    },
+    "resourcePrefix": {
+      "value": "videoagent"
+    },
+    "appServicePlanId": {
+      "value": "/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Web/serverfarms/xxx"
+    },
+    "logAnalyticsWorkspaceId": {
+      "value": "/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.OperationalInsights/workspaces/xxx"
+    },
+    "appInsightsName": {
+      "value": "your-existing-appinsights"
+    },
+    "orchestratorSchedule": {
+      "value": "0 0 6 * * *"
+    },
+    "videoSchedule": {
+      "value": "0 0 7 * * *"
+    }
+  }
+}
