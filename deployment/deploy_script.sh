@@ -8,13 +8,13 @@
 #   ./deploy_script.sh    - Deploy application code
 #
 # Configuration:
-#   - parameters.json: Azure infrastructure parameters
-#   - ../.env: Application-specific settings
+#   - ../.env: Azure subscription, resource group, and application settings
+#   - parameters.json: Resource prefix and timer schedules
 #
 # Prerequisites:
 #   - Azure CLI installed and logged in (az login)
+#   - .env file configured with Azure subscription and resource group
 #   - parameters.json configured
-#   - .env file configured
 #   - Function App already deployed via deploy_infra.sh
 #   - uv package manager installed (optional)
 # ================================================================
@@ -46,18 +46,19 @@ fi
 
 echo "Loading configuration..."
 
-# Read infrastructure params from parameters.json
-AZURE_SUBSCRIPTION_ID=$(jq -r '.parameters.azureSubscriptionId.value' "$PARAMS_FILE")
-AZURE_RESOURCE_GROUP=$(jq -r '.parameters.azureResourceGroup.value' "$PARAMS_FILE")
+# Load settings from .env
+source "$ENV_FILE"
+
+# Read additional params from parameters.json
 RESOURCE_PREFIX=$(jq -r '.parameters.resourcePrefix.value' "$PARAMS_FILE")
 ORCHESTRATOR_SCHEDULE=$(jq -r '.parameters.orchestratorSchedule.value' "$PARAMS_FILE")
 VIDEO_SCHEDULE=$(jq -r '.parameters.videoSchedule.value' "$PARAMS_FILE")
 
-# Load app-specific settings from .env
-source "$ENV_FILE"
-
 # Validate required .env variables
 REQUIRED_ENV_VARS=(
+    # Azure deployment settings
+    "AZURE_SUBSCRIPTION_ID"
+    "AZURE_RESOURCE_GROUP"
     # Tableau settings
     "TABLEAU_SERVER_URL"
     "TABLEAU_SITE_ID"

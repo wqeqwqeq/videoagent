@@ -11,13 +11,13 @@
 #   --what-if    Preview changes without deploying (dry run)
 #
 # Configuration:
-#   - parameters.json: Azure infrastructure parameters
-#   - ../.env: Application-specific settings (storage, app insights)
+#   - ../.env: Azure subscription, resource group, and storage settings
+#   - parameters.json: Bicep template parameters (location, prefix, resource names)
 #
 # Prerequisites:
 #   - Azure CLI installed and logged in (az login)
-#   - parameters.json configured with Azure resource IDs
-#   - .env file configured with app settings
+#   - .env file configured with Azure subscription and resource group
+#   - parameters.json configured with bicep parameters
 # ================================================================
 
 set -euo pipefail
@@ -67,17 +67,17 @@ fi
 
 echo "Loading configuration..."
 
-# Read infrastructure params from parameters.json
-AZURE_SUBSCRIPTION_ID=$(jq -r '.parameters.azureSubscriptionId.value' "$PARAMS_FILE")
-AZURE_RESOURCE_GROUP=$(jq -r '.parameters.azureResourceGroup.value' "$PARAMS_FILE")
+# Load settings from .env
+source "$ENV_FILE"
+
+# Read additional params from parameters.json
 AZURE_LOCATION=$(jq -r '.parameters.location.value' "$PARAMS_FILE")
 RESOURCE_PREFIX=$(jq -r '.parameters.resourcePrefix.value' "$PARAMS_FILE")
 
-# Load app-specific settings from .env
-source "$ENV_FILE"
-
-# Validate required .env variables (values already in .env.example)
+# Validate required .env variables
 REQUIRED_ENV_VARS=(
+    "AZURE_SUBSCRIPTION_ID"
+    "AZURE_RESOURCE_GROUP"
     "STORAGE_ACCOUNT_NAME"
     "STORAGE_CONTAINER"
 )
@@ -114,15 +114,16 @@ echo ""
 echo "================================================================"
 echo "VideoAgent Function App Deployment"
 echo "================================================================"
-echo "From parameters.json:"
+echo "From .env:"
+echo "   Subscription ID:    $AZURE_SUBSCRIPTION_ID"
 echo "   Resource Group:     $AZURE_RESOURCE_GROUP"
+echo "   Storage Account:    $STORAGE_ACCOUNT_NAME"
+echo "   Storage Container:  $STORAGE_CONTAINER"
+echo ""
+echo "From parameters.json:"
 echo "   Location:           $AZURE_LOCATION"
 echo "   Resource Prefix:    $RESOURCE_PREFIX"
 echo "   Function App Name:  ${RESOURCE_PREFIX}-func"
-echo ""
-echo "From .env:"
-echo "   Storage Account:    $STORAGE_ACCOUNT_NAME"
-echo "   Storage Container:  $STORAGE_CONTAINER"
 echo "================================================================"
 echo ""
 
