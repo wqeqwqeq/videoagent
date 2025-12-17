@@ -1,5 +1,6 @@
 """Settings and configuration loader for VideoAgent."""
 
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -23,6 +24,15 @@ class AzureOpenAISettings(BaseSettings):
     deployment_name: str = ""
     api_version: str = "2024-10-21"
 
+    def get_api_key(self) -> str:
+        """Get API key from env or AKV fallback."""
+        if "AZURE_OPENAI_API_KEY" in os.environ:
+            return self.api_key
+        from videoagent.services.keyvault import AKV
+
+        akv = AKV()
+        return akv.get_secret("azure-openai-api-key") or ""
+
 
 class TableauSettings(BaseSettings):
     """Tableau Server configuration from environment variables."""
@@ -34,6 +44,26 @@ class TableauSettings(BaseSettings):
     server_url: str = ""
     site_id: str = ""
     workbook_id: str = ""
+    username: str = ""
+    password: str = ""
+
+    def get_username(self) -> str:
+        """Get username from env or AKV fallback."""
+        if "TABLEAU_USERNAME" in os.environ:
+            return self.username
+        from videoagent.services.keyvault import AKV
+
+        akv = AKV()
+        return akv.get_secret("tableau-username") or ""
+
+    def get_password(self) -> str:
+        """Get password from env or AKV fallback."""
+        if "TABLEAU_PASSWORD" in os.environ:
+            return self.password
+        from videoagent.services.keyvault import AKV
+
+        akv = AKV()
+        return akv.get_secret("tableau-password") or ""
 
 
 class StorageSettings(BaseSettings):

@@ -1,6 +1,5 @@
 """Tableau service for downloading dashboard data and images."""
 
-import os
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -31,16 +30,10 @@ class TableauService:
 
     def _sign_in(self):
         """Sign in using PAT or username/password based on env config."""
-        auth_method = os.getenv("TABLEAU_AUTH_METHOD", "username_password")
 
-        if auth_method == "pat":
-            pat_name = os.getenv("TABLEAU_PAT_NAME")
-            pat_value = os.getenv("TABLEAU_PAT_VALUE")
-            auth = TSC.PersonalAccessTokenAuth(pat_name, pat_value, site_id=self.settings.site_id)
-        else:
-            username = os.getenv("TABLEAU_USERNAME")
-            password = os.getenv("TABLEAU_PASSWORD")
-            auth = TSC.TableauAuth(username, password, site_id=self.settings.site_id)
+        username = self.settings.get_username()
+        password = self.settings.get_password()
+        auth = TSC.TableauAuth(username, password, site_id=self.settings.site_id)
 
         self.server.auth.sign_in(auth)
 

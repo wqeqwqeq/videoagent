@@ -98,7 +98,7 @@ def get_openai_voice_client() -> AzureOpenAIVoiceClient:
     if _voice_client is None:
         settings = get_azure_openai_settings()
         _voice_client = AzureOpenAIVoiceClient(
-            api_key=settings.api_key,
+            api_key=settings.get_api_key(),
             endpoint=settings.endpoint,
             deployment=settings.deployment_name,
             api_version=settings.api_version,

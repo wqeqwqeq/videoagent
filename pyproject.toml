@@ -5,8 +5,6 @@ description = "Generate narrated videos from Tableau dashboards using Azure Open
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    # Microsoft Agent Framework
-    "agent-framework>=1.0.0b251120",
     # Tableau Server Client
     "tableauserverclient>=0.31",
     # Azure OpenAI
@@ -19,6 +17,7 @@ dependencies = [
     # Azure Blob Storage (optional, for blob storage mode)
     "azure-storage-blob>=12.19.0",
     "azure-identity>=1.15.0",
+    "azure-keyvault-secrets>=4.10.0",
 ]
 
 [tool.uv]
